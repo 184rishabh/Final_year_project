@@ -54,6 +54,7 @@ const pickImage = async () => {
     
 });
 console.log(result);
+setImage(result.uri);
 if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
@@ -69,7 +70,13 @@ if (!result.canceled) {
     aspect:[16,9],
     quality:0.5,
   })
+  setImage(image.uri);
   console.log(image);
+ }
+
+ let imagepreview=<Text>No Image Taken</Text>
+ if(image){
+  imagepreview=<Image style={styles.Img}source={{uri:image}}/>
  }
   return (
 //     <View style={{ flex: 1}}>
@@ -100,6 +107,9 @@ if (!result.canceled) {
         style={{height:250,width:250,marginLeft:35,borderRadius:10}}
         source={require("./assets/leaf.png")}
       />
+      <View style={styles.imagePreview}>
+     {imagepreview}
+      </View>
      <TouchableOpacity style={{marginLeft:40,marginTop:20}} >
       <Text style={styles.submit} onPress={takeImagehandler}>Camera</Text>
      </TouchableOpacity>
@@ -141,6 +151,20 @@ const styles = StyleSheet.create({
   fixedRatio:{
       flex: 1,
       aspectRatio: 1
+  },
+  imagePreview:{
+    width:'70%',
+    height:200,
+    marginTop:8,
+    // paddingLeft:10,
+    justifyContent:'center',
+    alignItems:'center',
+    backgroundColor:'#2BB789',
+    borderRadius:8
+  },
+  Img:{
+    width:'100%',
+    height:'100%',
   }
     })
 export default DiseasePrediction
