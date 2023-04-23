@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text ,View } from 'react-native'
-
+import {ImageBackground} from 'react-native';
 import Background from './Background'
 
 import {StyleSheet, TextInput,TouchableOpacity} from 'react-native';
@@ -48,9 +48,11 @@ function SecondScreen({navigation, route}) {
     });
   }
   return (
-   <Background>
-     <View style={{display:'flex',justifyContent:'center',alignItems:'center',flexDirection:'column'}}>
-      <Text style={{ color: 'white', fontSize: 30 ,marginLeft:30,fontWeight:'500',marginTop:10,marginBottom:20}}>Crop Recommendation</Text>
+    <ImageBackground
+    source={require("./assets/leaves.jpeg")}
+    style={styles.backgroundImage}>
+      <View style={styles.container}>
+      <Text style={{ color: 'white', fontSize: 30,fontWeight:'500',marginTop:30}}>Crop Recommendation</Text>
       <Text style={{color:'white',fontSize:30,fontWeight:600}}>{result}</Text>
       <TextInput
         style={styles.input}
@@ -101,15 +103,23 @@ function SecondScreen({navigation, route}) {
         value={rain}
         onChangeText={newText => setrain(newText)}
       />
-     
-      <TouchableOpacity style={{marginLeft:10}} onPress={fetchapi}>
+      <TouchableOpacity onPress={fetchapi}>
         <Text style={styles.submit}>Predict</Text>
       </TouchableOpacity>
       </View>
-   </Background>   
+   </ImageBackground>   
   )
 }
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover', 
+  },
+  container:{
+    flex:1,
+    flexDirection:'column',
+    alignItems:'center'
+ },
   input: {
     height: 40,
     margin: 6,
@@ -119,7 +129,6 @@ const styles = StyleSheet.create({
     width:250,
     borderRadius:20,
     height:40,
-    marginLeft:20
   },
   submit:{
   color:'white', 
