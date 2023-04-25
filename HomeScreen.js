@@ -57,24 +57,26 @@ const styles = StyleSheet.create({
   appname:{
      color: 'white',
       fontSize: 50,
-      fontWeight:'500',
+      fontWeight:'700',
       marginTop:10,
     },
   appimage:
-  {height:250,
+  { 
+    height:250,
     width:250,
     borderRadius:40,
     marginTop:40,
   },
   appdescription:{
     color:'white',
-    fontSize:20,
+    fontSize:25,
     fontWeight:600,
     marginTop:20
   },
-  underline:{width:300,
+  underline:{
+    width:350,
     backgroundColor:'white',
-    height:3,
+    height:2,
     marginTop:5
   },
   mybtn:{
@@ -84,10 +86,9 @@ const styles = StyleSheet.create({
     backgroundColor:'white',
     color:'black',
     width:250,
-    margin:10,
     padding: 10,
+    textAlign:'center',
     borderRadius:50,
-    textAlign:'center'
   },
   mybtn1:{
     color:'white', 
@@ -95,12 +96,12 @@ const styles = StyleSheet.create({
     backgroundColor:'#2BB789',
     color:'black',
     width:250,
-    margin:10,
+    marginTop:10,
     padding: 10,
-    borderRadius:50,
     textAlign:'center',
     color:'white',
-    fontWeight:500
+    fontWeight:500,
+    borderRadius:50,
   },
 })
 

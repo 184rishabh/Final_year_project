@@ -1,25 +1,29 @@
 import React from 'react'
-import { Text ,View ,Image,Button } from 'react-native'
+import { Text ,View ,Image } from 'react-native'
 import { useState ,useEffect} from 'react';
-import Background from './Background'
 import {ImageBackground} from 'react-native';
-import {StyleSheet, TextInput,TouchableOpacity} from 'react-native';
+import {StyleSheet,TouchableOpacity} from 'react-native';
 import { Camera } from 'expo-camera';
 import {launchCameraAsync,useCameraPermissions,PermissionStatus} from 'expo-image-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
+import axios from 'axios'
+
 function DiseasePrediction({navigation, route}) {
 const [cameraPermissionInformation,requestPermission]=useCameraPermissions();
 const [hasCameraPermission, setHasCameraPermission] = useState(null);
 const [camera, setCamera] = useState(null);
 const [image, setImage] = useState(null);
 const [type, setType] = useState(Camera.Constants.Type.back);
+const [result, setresult] = useState('')
+
 useEffect(() => {
     (async () => {
       const cameraStatus = await Camera.requestCameraPermissionsAsync();
       setHasCameraPermission(cameraStatus.status === 'granted');
 })();
   }, []);
+
   const takePicture = async () => {
     if(camera){
         const data = await camera.takePictureAsync(null)
@@ -29,7 +33,6 @@ useEffect(() => {
  if (hasCameraPermission === false) {
     return <Text>No access to camera</Text>;
   }
-
 
 async function verifyPermissions(){
   if(cameraPermissionInformation.status === PermissionStatus.UNDETERMINED){
@@ -43,6 +46,27 @@ async function verifyPermissions(){
   }
   return true;
 }
+const uploadImage = async (uri) => {
+  try {
+    console.log("hello from axio")
+    const formData = new FormData();
+    formData.append('file', {
+      uri: uri,
+      type: 'image/jpeg', 
+      name: 'leaf.jpg', 
+    });
+    const response = await axios.post('https://harvestify-production.up.railway.app/disease-predict', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    console.log("hello ")
+    console.log('Upload response:', response.data);
+    setresult(response.data.disease);
+  } catch (error) {
+    console.error('Upload error:', error);
+  }
+};
 
 const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -55,6 +79,7 @@ const pickImage = async () => {
 });
 console.log(result);
 setImage(result.uri);
+uploadImage(result.uri);
 if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
@@ -84,7 +109,10 @@ if (!result.canceled) {
       source={require("./assets/leaves.jpeg")}
       style={styles.backgroundImage}>
         <View style={styles.container}>
-        <Text style={{ color: 'white', fontSize: 35 ,fontWeight:'500',marginTop:20,marginBottom:20}}>Disease Detection</Text>
+        <Text style={{ color: 'white', fontSize: 40 ,fontWeight:'700',marginTop:20,marginBottom:20,letterSpacing:2}}>
+          Disease 
+        </Text>
+        <Text style={{color:'white',fontSize:30,fontWeight:600,margin:5}}>{result}</Text>
         <View style={styles.imagePreview}>
            {imagepreview}
          </View>

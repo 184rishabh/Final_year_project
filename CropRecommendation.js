@@ -1,24 +1,23 @@
 import React from 'react'
-import { Text ,View } from 'react-native'
+import { Text ,View,Button ,Keyboard} from 'react-native'
 import {ImageBackground} from 'react-native';
-import Background from './Background'
-
 import {StyleSheet, TextInput,TouchableOpacity} from 'react-native';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import axios from 'axios'
 
 
-function SecondScreen({navigation, route}) {
-  const [nitrogen, setnitrogen] = useState(20)
-  const [phosphorus, setphosphorus] = useState(20)
-  const [potassium, setpotassium] = useState(20)
-  const [temp, settemp] = useState(20)
-  const [humidity, sethumidity] = useState(20)
-  const [ph, setph] = useState(7)
-  const [rain, setrain] = useState(20)
+function CropRecommendation({navigation, route}) {
+  const [nitrogen, setnitrogen] = useState('')
+  const [phosphorus, setphosphorus] = useState('')
+  const [potassium, setpotassium] = useState('')
+  const [temp, settemp] = useState('')
+  const [humidity, sethumidity] = useState('')
+  const [ph, setph] = useState('')
+  const [rain, setrain] = useState('')
   const [result, setresult] = useState('')
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false); 
   const fetchapi=()=>{
-    axios.post('https://myproject-production-eb4b.up.railway.app/predict',
+    axios.post('https://harvestify-production.up.railway.app/predict',
     {
       "nitrogen":nitrogen,
       "phosphorus":phosphorus,
@@ -47,63 +46,90 @@ function SecondScreen({navigation, route}) {
       console.log(error);
     });
   }
+
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
+    Keyboard.addListener('keyboardDidHide', handleKeyboardDidHide);
+  }, []);
+  const handleKeyboardDidShow = () => {
+    setIsKeyboardOpen(true);
+  };
+
+  const handleKeyboardDidHide = () => {
+    setIsKeyboardOpen(false);
+  };
+
+  const handleCloseNumericKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
     <ImageBackground
     source={require("./assets/leaves.jpeg")}
     style={styles.backgroundImage}>
       <View style={styles.container}>
-      <Text style={{ color: 'white', fontSize: 30,fontWeight:'500',marginTop:30}}>Crop Recommendation</Text>
-      <Text style={{color:'white',fontSize:30,fontWeight:600}}>{result}</Text>
+      {isKeyboardOpen && (
+        <Text onPress={handleCloseNumericKeyboard} style={{color:"white",fontSize:20,fontWeight:800}}>
+          Close Keyboard
+        </Text>
+      )}
+      <Text style={styles.title}>
+        Crop 
+      </Text>
+      <Text style={styles.title1}>
+        Recommendation
+      </Text>
+      <Text style={{color:'white',fontSize:40,fontWeight:600,margin:5}}>{result}</Text>
       <TextInput
         style={styles.input}
         placeholder="Nitrogen"
         keyboardType="numeric"
-        value={nitrogen}
+        value={nitrogen.toString()}
         onChangeText={newText => setnitrogen(newText)}
       />
       <TextInput
         style={styles.input}
         placeholder="Phosphorus"
         keyboardType="numeric"
-        value={phosphorus}
+        value={phosphorus.toString()}
         onChangeText={newText => setphosphorus(newText)}
       />
       <TextInput
         style={styles.input}
         placeholder="Potassium"
         keyboardType="numeric"
-        value={potassium}
+        value={potassium.toString()}
         onChangeText={newText => setpotassium(newText)}
       />
       <TextInput
         style={styles.input}
         placeholder="Temperature"
         keyboardType="numeric"
-        value={temp}
+        value={temp.toString()}
         onChangeText={newText => settemp(newText)}
       />
       <TextInput
         style={styles.input}
         placeholder="Humidity"
         keyboardType="numeric"
-        value={humidity}
+        value={humidity.toString()}
         onChangeText={newText => sethumidity(newText)}
       />
       <TextInput
         style={styles.input}
         placeholder="Ph"
         keyboardType="numeric"
-        value={ph}
+        value={ph.toString()}
         onChangeText={newText => setph(newText)}
       />
        <TextInput
         style={styles.input}
         placeholder="Rain"
         keyboardType="numeric"
-        value={rain}
+        value={rain.toString()}
         onChangeText={newText => setrain(newText)}
       />
-      <TouchableOpacity onPress={fetchapi}>
+      <TouchableOpacity onPress={fetchapi} style={{width:"70%"}}>
         <Text style={styles.submit}>Predict</Text>
       </TouchableOpacity>
       </View>
@@ -120,13 +146,24 @@ const styles = StyleSheet.create({
     flexDirection:'column',
     alignItems:'center'
  },
+ title:{
+  color: 'white',
+  fontSize: 40,
+  fontWeight:'700',
+  marginTop:10,
+},
+title1:{
+  color: 'white',
+  fontSize: 40,
+  fontWeight:'700',
+},
   input: {
-    height: 40,
+    height: "10%",
     margin: 6,
     borderWidth: 1,
     padding: 10,
     backgroundColor:'white',
-    width:250,
+    width:"70%",
     borderRadius:20,
     height:40,
   },
@@ -135,11 +172,11 @@ const styles = StyleSheet.create({
   fontSize:20,
   backgroundColor:'#2BB789',
   color:'black',
-  width:250,
-  margin:10,
+  width:"100%",
   padding: 10,
+  marginTop:6,
   borderRadius:50,
   textAlign:'center',
   }
   })
-export default SecondScreen
+export default CropRecommendation
