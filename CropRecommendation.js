@@ -1,8 +1,9 @@
 import React from 'react'
 import { Text ,View,Button ,Keyboard} from 'react-native'
 import {ImageBackground} from 'react-native';
-import {StyleSheet, TextInput,TouchableOpacity} from 'react-native';
+import {StyleSheet, TextInput,TouchableOpacity,Alert} from 'react-native';
 import { useState,useEffect } from 'react';
+
 import axios from 'axios'
 
 
@@ -16,7 +17,66 @@ function CropRecommendation({navigation, route}) {
   const [rain, setrain] = useState('')
   const [result, setresult] = useState('')
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false); 
+
+  const handletempchange = (text) => {
+    if (text === '') {
+      settemp('');
+    } else {
+      const intValue = parseInt(text.replace(/[^0-9]/g, ''));
+      if (intValue >= 1 && intValue <= 50) {
+        settemp(`${intValue}`);
+      }
+      else{
+        Alert.alert("Enter Temprature between 1 to 50")
+      }
+    }
+  }
+
+ const handlepchange=(p)=>{
+  if(p===''){
+    setph('');
+  }else{
+    const phvalue=parseInt(p.replace(/[^0-9]/g,''));
+    if(phvalue>=5 && phvalue<=8){
+      setph(`${phvalue}`);
+    }else{
+      Alert.alert("Enter Ph between 5 to 8")
+    }
+  }
+
+ }
   const fetchapi=()=>{
+
+    if (!nitrogen) {
+      Alert.alert('Nitrogen Value is required');
+      return;
+    }
+    if (!phosphorus) {
+      Alert.alert('Phosphorus Value is required');
+      return;
+    }
+    if (!potassium) {
+      Alert.alert('Potassium Value is required');
+      return;
+    }
+    if (!temp) {
+      Alert.alert('Temprature Value is required');
+      return;
+    }
+    if (!humidity) {
+      Alert.alert('Humidity Value is required');
+      return;
+    }
+    if (!ph) {
+      Alert.alert('Ph Value is required');
+      return;
+    }
+    if (!rain) {
+      Alert.alert('Rain Value is required');
+      return;
+    }
+    
+
     axios.post('https://harvestify-production.up.railway.app/predict',
     {
       "nitrogen":nitrogen,
@@ -84,49 +144,49 @@ function CropRecommendation({navigation, route}) {
         style={styles.input}
         placeholder="Nitrogen"
         keyboardType="numeric"
-        value={nitrogen.toString()}
+        value={nitrogen}
         onChangeText={newText => setnitrogen(newText)}
       />
       <TextInput
         style={styles.input}
         placeholder="Phosphorus"
         keyboardType="numeric"
-        value={phosphorus.toString()}
+        value={phosphorus}
         onChangeText={newText => setphosphorus(newText)}
       />
       <TextInput
         style={styles.input}
         placeholder="Potassium"
         keyboardType="numeric"
-        value={potassium.toString()}
+        value={potassium}
         onChangeText={newText => setpotassium(newText)}
       />
       <TextInput
         style={styles.input}
         placeholder="Temperature"
         keyboardType="numeric"
-        value={temp.toString()}
-        onChangeText={newText => settemp(newText)}
+        value={temp}
+        onChangeText={handletempchange}
       />
       <TextInput
         style={styles.input}
         placeholder="Humidity"
         keyboardType="numeric"
-        value={humidity.toString()}
+        value={humidity}
         onChangeText={newText => sethumidity(newText)}
       />
       <TextInput
         style={styles.input}
         placeholder="Ph"
         keyboardType="numeric"
-        value={ph.toString()}
-        onChangeText={newText => setph(newText)}
+        value={ph}
+        onChangeText={handlepchange}
       />
        <TextInput
         style={styles.input}
         placeholder="Rain"
         keyboardType="numeric"
-        value={rain.toString()}
+        value={rain}
         onChangeText={newText => setrain(newText)}
       />
       <TouchableOpacity onPress={fetchapi} style={{width:"70%"}}>
