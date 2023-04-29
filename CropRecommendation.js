@@ -32,19 +32,25 @@ function CropRecommendation({navigation, route}) {
     }
   }
 
- const handlepchange=(p)=>{
-  if(p===''){
-    setph('');
-  }else{
-    const phvalue=parseInt(p.replace(/[^0-9]/g,''));
-    if(phvalue>=5 && phvalue<=8){
-      setph(`${phvalue}`);
-    }else{
-      Alert.alert("Enter Ph between 5 to 8")
-    }
-  }
+//  const handlephchange=(p)=>{
+//   if(p===''){
+//     setph('');
+//   }else{
+//     const floatValue = parseFloat(p);
+//    setph(floatValue);
+//   }
 
- }
+//  }
+
+const handleinputchange=(p)=>{
+  const floatValue = parseFloat(p.replace(/[^0-9.]/g, ''));
+ if (floatValue >= 5 && floatValue <= 8) {
+     setph(floatValue)
+    } else {
+      Alert.alert('Please enter a value between 5 and 8');
+    }
+    
+}
   const fetchapi=()=>{
 
     if (!nitrogen) {
@@ -180,7 +186,8 @@ function CropRecommendation({navigation, route}) {
         placeholder="Ph"
         keyboardType="numeric"
         value={ph}
-        onChangeText={handlepchange}
+        onChangeText={handleinputchange}
+        
       />
        <TextInput
         style={styles.input}

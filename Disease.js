@@ -5,6 +5,7 @@ import {ImageBackground} from 'react-native';
 import {StyleSheet,TouchableOpacity} from 'react-native';
 import { Camera } from 'expo-camera';
 import {launchCameraAsync,useCameraPermissions,PermissionStatus} from 'expo-image-picker';
+import { ActivityIndicator } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
 import axios from 'axios'
@@ -16,6 +17,7 @@ const [camera, setCamera] = useState(null);
 const [image, setImage] = useState(null);
 const [type, setType] = useState(Camera.Constants.Type.back);
 const [result, setresult] = useState('')
+
 
 useEffect(() => {
     (async () => {
@@ -104,6 +106,10 @@ if (!result.canceled) {
  if(image){
   imagepreview=<Image style={styles.Img}source={{uri:image}}/>
  }
+
+
+
+ 
   return (
     <ImageBackground
       source={require("./assets/leaves.jpeg")}
@@ -112,6 +118,11 @@ if (!result.canceled) {
         <Text style={{ color: 'white', fontSize: 40 ,fontWeight:'700',marginTop:20,marginBottom:20,letterSpacing:2}}>
           Disease 
         </Text>
+        {!result && image &&
+          <View>
+      <ActivityIndicator size="large" color="#ffffff" />
+          </View>
+       }
         <Text style={{color:'white',fontSize:30,fontWeight:600,margin:5}}>{result}</Text>
         <View style={styles.imagePreview}>
            {imagepreview}
